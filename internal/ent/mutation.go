@@ -7,11 +7,12 @@ import (
 	"errors"
 	"fmt"
 	"sync"
+	"time"
 
 	"entgo.io/ent"
 	"entgo.io/ent/dialect/sql"
-	"github.com/inchori/starknet-indexer/ent/predicate"
-	"github.com/inchori/starknet-indexer/ent/starknetdeclaretx"
+	"github.com/inchori/starknet-indexer/internal/ent/predicate"
+	"github.com/inchori/starknet-indexer/internal/ent/starknetdeclaretx"
 )
 
 const (
@@ -36,6 +37,7 @@ type StarknetDeclareTxMutation struct {
 	addblock_number *int
 	declare_tx_hash *string
 	class_hash      *string
+	created_at      *time.Time
 	clearedFields   map[string]struct{}
 	done            bool
 	oldValue        func(context.Context) (*StarknetDeclareTx, error)
@@ -268,6 +270,42 @@ func (m *StarknetDeclareTxMutation) ResetClassHash() {
 	m.class_hash = nil
 }
 
+// SetCreatedAt sets the "created_at" field.
+func (m *StarknetDeclareTxMutation) SetCreatedAt(t time.Time) {
+	m.created_at = &t
+}
+
+// CreatedAt returns the value of the "created_at" field in the mutation.
+func (m *StarknetDeclareTxMutation) CreatedAt() (r time.Time, exists bool) {
+	v := m.created_at
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldCreatedAt returns the old "created_at" field's value of the StarknetDeclareTx entity.
+// If the StarknetDeclareTx object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *StarknetDeclareTxMutation) OldCreatedAt(ctx context.Context) (v time.Time, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldCreatedAt is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldCreatedAt requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldCreatedAt: %w", err)
+	}
+	return oldValue.CreatedAt, nil
+}
+
+// ResetCreatedAt resets all changes to the "created_at" field.
+func (m *StarknetDeclareTxMutation) ResetCreatedAt() {
+	m.created_at = nil
+}
+
 // Where appends a list predicates to the StarknetDeclareTxMutation builder.
 func (m *StarknetDeclareTxMutation) Where(ps ...predicate.StarknetDeclareTx) {
 	m.predicates = append(m.predicates, ps...)
@@ -302,7 +340,7 @@ func (m *StarknetDeclareTxMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *StarknetDeclareTxMutation) Fields() []string {
-	fields := make([]string, 0, 3)
+	fields := make([]string, 0, 4)
 	if m.block_number != nil {
 		fields = append(fields, starknetdeclaretx.FieldBlockNumber)
 	}
@@ -311,6 +349,9 @@ func (m *StarknetDeclareTxMutation) Fields() []string {
 	}
 	if m.class_hash != nil {
 		fields = append(fields, starknetdeclaretx.FieldClassHash)
+	}
+	if m.created_at != nil {
+		fields = append(fields, starknetdeclaretx.FieldCreatedAt)
 	}
 	return fields
 }
@@ -326,6 +367,8 @@ func (m *StarknetDeclareTxMutation) Field(name string) (ent.Value, bool) {
 		return m.DeclareTxHash()
 	case starknetdeclaretx.FieldClassHash:
 		return m.ClassHash()
+	case starknetdeclaretx.FieldCreatedAt:
+		return m.CreatedAt()
 	}
 	return nil, false
 }
@@ -341,6 +384,8 @@ func (m *StarknetDeclareTxMutation) OldField(ctx context.Context, name string) (
 		return m.OldDeclareTxHash(ctx)
 	case starknetdeclaretx.FieldClassHash:
 		return m.OldClassHash(ctx)
+	case starknetdeclaretx.FieldCreatedAt:
+		return m.OldCreatedAt(ctx)
 	}
 	return nil, fmt.Errorf("unknown StarknetDeclareTx field %s", name)
 }
@@ -370,6 +415,13 @@ func (m *StarknetDeclareTxMutation) SetField(name string, value ent.Value) error
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetClassHash(v)
+		return nil
+	case starknetdeclaretx.FieldCreatedAt:
+		v, ok := value.(time.Time)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetCreatedAt(v)
 		return nil
 	}
 	return fmt.Errorf("unknown StarknetDeclareTx field %s", name)
@@ -443,6 +495,9 @@ func (m *StarknetDeclareTxMutation) ResetField(name string) error {
 		return nil
 	case starknetdeclaretx.FieldClassHash:
 		m.ResetClassHash()
+		return nil
+	case starknetdeclaretx.FieldCreatedAt:
+		m.ResetCreatedAt()
 		return nil
 	}
 	return fmt.Errorf("unknown StarknetDeclareTx field %s", name)

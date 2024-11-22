@@ -12,7 +12,7 @@ import (
 	"entgo.io/ent"
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
-	"github.com/inchori/starknet-indexer/ent/starknetdeclaretx"
+	"github.com/inchori/starknet-indexer/internal/ent/starknetdeclaretx"
 )
 
 // ent aliases to avoid import conflicts in user's code.

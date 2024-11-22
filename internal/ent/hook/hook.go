@@ -6,7 +6,7 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/inchori/starknet-indexer/ent"
+	"github.com/inchori/starknet-indexer/internal/ent"
 )
 
 // The StarknetDeclareTxFunc type is an adapter to allow the use of ordinary

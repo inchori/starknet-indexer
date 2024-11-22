@@ -3,6 +3,8 @@
 package starknetdeclaretx
 
 import (
+	"time"
+
 	"entgo.io/ent/dialect/sql"
 )
 
@@ -17,6 +19,8 @@ const (
 	FieldDeclareTxHash = "declare_tx_hash"
 	// FieldClassHash holds the string denoting the class_hash field in the database.
 	FieldClassHash = "class_hash"
+	// FieldCreatedAt holds the string denoting the created_at field in the database.
+	FieldCreatedAt = "created_at"
 	// Table holds the table name of the starknetdeclaretx in the database.
 	Table = "starknet_declare_txes"
 )
@@ -27,6 +31,7 @@ var Columns = []string{
 	FieldBlockNumber,
 	FieldDeclareTxHash,
 	FieldClassHash,
+	FieldCreatedAt,
 }
 
 // ValidColumn reports if the column name is valid (part of the table columns).
@@ -38,6 +43,11 @@ func ValidColumn(column string) bool {
 	}
 	return false
 }
+
+var (
+	// DefaultCreatedAt holds the default value on creation for the "created_at" field.
+	DefaultCreatedAt time.Time
+)
 
 // OrderOption defines the ordering options for the StarknetDeclareTx queries.
 type OrderOption func(*sql.Selector)
@@ -60,4 +70,9 @@ func ByDeclareTxHash(opts ...sql.OrderTermOption) OrderOption {
 // ByClassHash orders the results by the class_hash field.
 func ByClassHash(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldClassHash, opts...).ToFunc()
+}
+
+// ByCreatedAt orders the results by the created_at field.
+func ByCreatedAt(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldCreatedAt, opts...).ToFunc()
 }

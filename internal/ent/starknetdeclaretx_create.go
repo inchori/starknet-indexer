@@ -6,10 +6,11 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"time"
 
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
-	"github.com/inchori/starknet-indexer/ent/starknetdeclaretx"
+	"github.com/inchori/starknet-indexer/internal/ent/starknetdeclaretx"
 )
 
 // StarknetDeclareTxCreate is the builder for creating a StarknetDeclareTx entity.
@@ -37,6 +38,20 @@ func (sdtc *StarknetDeclareTxCreate) SetClassHash(s string) *StarknetDeclareTxCr
 	return sdtc
 }
 
+// SetCreatedAt sets the "created_at" field.
+func (sdtc *StarknetDeclareTxCreate) SetCreatedAt(t time.Time) *StarknetDeclareTxCreate {
+	sdtc.mutation.SetCreatedAt(t)
+	return sdtc
+}
+
+// SetNillableCreatedAt sets the "created_at" field if the given value is not nil.
+func (sdtc *StarknetDeclareTxCreate) SetNillableCreatedAt(t *time.Time) *StarknetDeclareTxCreate {
+	if t != nil {
+		sdtc.SetCreatedAt(*t)
+	}
+	return sdtc
+}
+
 // Mutation returns the StarknetDeclareTxMutation object of the builder.
 func (sdtc *StarknetDeclareTxCreate) Mutation() *StarknetDeclareTxMutation {
 	return sdtc.mutation
@@ -44,6 +59,7 @@ func (sdtc *StarknetDeclareTxCreate) Mutation() *StarknetDeclareTxMutation {
 
 // Save creates the StarknetDeclareTx in the database.
 func (sdtc *StarknetDeclareTxCreate) Save(ctx context.Context) (*StarknetDeclareTx, error) {
+	sdtc.defaults()
 	return withHooks(ctx, sdtc.sqlSave, sdtc.mutation, sdtc.hooks)
 }
 
@@ -69,6 +85,14 @@ func (sdtc *StarknetDeclareTxCreate) ExecX(ctx context.Context) {
 	}
 }
 
+// defaults sets the default values of the builder before save.
+func (sdtc *StarknetDeclareTxCreate) defaults() {
+	if _, ok := sdtc.mutation.CreatedAt(); !ok {
+		v := starknetdeclaretx.DefaultCreatedAt
+		sdtc.mutation.SetCreatedAt(v)
+	}
+}
+
 // check runs all checks and user-defined validators on the builder.
 func (sdtc *StarknetDeclareTxCreate) check() error {
 	if _, ok := sdtc.mutation.BlockNumber(); !ok {
@@ -79,6 +103,9 @@ func (sdtc *StarknetDeclareTxCreate) check() error {
 	}
 	if _, ok := sdtc.mutation.ClassHash(); !ok {
 		return &ValidationError{Name: "class_hash", err: errors.New(`ent: missing required field "StarknetDeclareTx.class_hash"`)}
+	}
+	if _, ok := sdtc.mutation.CreatedAt(); !ok {
+		return &ValidationError{Name: "created_at", err: errors.New(`ent: missing required field "StarknetDeclareTx.created_at"`)}
 	}
 	return nil
 }
@@ -118,6 +145,10 @@ func (sdtc *StarknetDeclareTxCreate) createSpec() (*StarknetDeclareTx, *sqlgraph
 		_spec.SetField(starknetdeclaretx.FieldClassHash, field.TypeString, value)
 		_node.ClassHash = value
 	}
+	if value, ok := sdtc.mutation.CreatedAt(); ok {
+		_spec.SetField(starknetdeclaretx.FieldCreatedAt, field.TypeTime, value)
+		_node.CreatedAt = value
+	}
 	return _node, _spec
 }
 
@@ -139,6 +170,7 @@ func (sdtcb *StarknetDeclareTxCreateBulk) Save(ctx context.Context) ([]*Starknet
 	for i := range sdtcb.builders {
 		func(i int, root context.Context) {
 			builder := sdtcb.builders[i]
+			builder.defaults()
 			var mut Mutator = MutateFunc(func(ctx context.Context, m Mutation) (Value, error) {
 				mutation, ok := m.(*StarknetDeclareTxMutation)
 				if !ok {

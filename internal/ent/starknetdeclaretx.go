@@ -5,10 +5,11 @@ package ent
 import (
 	"fmt"
 	"strings"
+	"time"
 
 	"entgo.io/ent"
 	"entgo.io/ent/dialect/sql"
-	"github.com/inchori/starknet-indexer/ent/starknetdeclaretx"
+	"github.com/inchori/starknet-indexer/internal/ent/starknetdeclaretx"
 )
 
 // StarknetDeclareTx is the model entity for the StarknetDeclareTx schema.
@@ -21,7 +22,9 @@ type StarknetDeclareTx struct {
 	// DeclareTxHash holds the value of the "declare_tx_hash" field.
 	DeclareTxHash string `json:"declare_tx_hash,omitempty"`
 	// ClassHash holds the value of the "class_hash" field.
-	ClassHash    string `json:"class_hash,omitempty"`
+	ClassHash string `json:"class_hash,omitempty"`
+	// CreatedAt holds the value of the "created_at" field.
+	CreatedAt    time.Time `json:"created_at,omitempty"`
 	selectValues sql.SelectValues
 }
 
@@ -34,6 +37,8 @@ func (*StarknetDeclareTx) scanValues(columns []string) ([]any, error) {
 			values[i] = new(sql.NullInt64)
 		case starknetdeclaretx.FieldDeclareTxHash, starknetdeclaretx.FieldClassHash:
 			values[i] = new(sql.NullString)
+		case starknetdeclaretx.FieldCreatedAt:
+			values[i] = new(sql.NullTime)
 		default:
 			values[i] = new(sql.UnknownType)
 		}
@@ -72,6 +77,12 @@ func (sdt *StarknetDeclareTx) assignValues(columns []string, values []any) error
 				return fmt.Errorf("unexpected type %T for field class_hash", values[i])
 			} else if value.Valid {
 				sdt.ClassHash = value.String
+			}
+		case starknetdeclaretx.FieldCreatedAt:
+			if value, ok := values[i].(*sql.NullTime); !ok {
+				return fmt.Errorf("unexpected type %T for field created_at", values[i])
+			} else if value.Valid {
+				sdt.CreatedAt = value.Time
 			}
 		default:
 			sdt.selectValues.Set(columns[i], values[i])
@@ -117,6 +128,9 @@ func (sdt *StarknetDeclareTx) String() string {
 	builder.WriteString(", ")
 	builder.WriteString("class_hash=")
 	builder.WriteString(sdt.ClassHash)
+	builder.WriteString(", ")
+	builder.WriteString("created_at=")
+	builder.WriteString(sdt.CreatedAt.Format(time.ANSIC))
 	builder.WriteByte(')')
 	return builder.String()
 }

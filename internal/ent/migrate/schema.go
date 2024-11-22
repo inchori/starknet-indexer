@@ -14,6 +14,7 @@ var (
 		{Name: "block_number", Type: field.TypeInt},
 		{Name: "declare_tx_hash", Type: field.TypeString},
 		{Name: "class_hash", Type: field.TypeString},
+		{Name: "created_at", Type: field.TypeTime},
 	}
 	// StarknetDeclareTxesTable holds the schema information for the "starknet_declare_txes" table.
 	StarknetDeclareTxesTable = &schema.Table{

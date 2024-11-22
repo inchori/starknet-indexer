@@ -3,6 +3,7 @@ package schema
 import (
 	"entgo.io/ent"
 	"entgo.io/ent/schema/field"
+	"time"
 )
 
 // StarknetDeclareTx holds the schema definition for the StarknetDeclareTx entity.
@@ -16,6 +17,8 @@ func (StarknetDeclareTx) Fields() []ent.Field {
 		field.Int("block_number"),
 		field.String("declare_tx_hash"),
 		field.String("class_hash"),
+		field.Time("created_at").
+			Default(time.Now()),
 	}
 }
 

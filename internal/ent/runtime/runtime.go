@@ -2,7 +2,7 @@
 
 package runtime
 
-// The schema-stitching logic is generated in github.com/inchori/starknet-indexer/ent/runtime.go
+// The schema-stitching logic is generated in github.com/inchori/starknet-indexer/internal/ent/runtime.go
 
 const (
 	Version = "v0.14.1"                                         // Version of ent codegen.

@@ -3,8 +3,10 @@
 package starknetdeclaretx
 
 import (
+	"time"
+
 	"entgo.io/ent/dialect/sql"
-	"github.com/inchori/starknet-indexer/ent/predicate"
+	"github.com/inchori/starknet-indexer/internal/ent/predicate"
 )
 
 // ID filters vertices based on their ID field.
@@ -65,6 +67,11 @@ func DeclareTxHash(v string) predicate.StarknetDeclareTx {
 // ClassHash applies equality check predicate on the "class_hash" field. It's identical to ClassHashEQ.
 func ClassHash(v string) predicate.StarknetDeclareTx {
 	return predicate.StarknetDeclareTx(sql.FieldEQ(FieldClassHash, v))
+}
+
+// CreatedAt applies equality check predicate on the "created_at" field. It's identical to CreatedAtEQ.
+func CreatedAt(v time.Time) predicate.StarknetDeclareTx {
+	return predicate.StarknetDeclareTx(sql.FieldEQ(FieldCreatedAt, v))
 }
 
 // BlockNumberEQ applies the EQ predicate on the "block_number" field.
@@ -235,6 +242,46 @@ func ClassHashEqualFold(v string) predicate.StarknetDeclareTx {
 // ClassHashContainsFold applies the ContainsFold predicate on the "class_hash" field.
 func ClassHashContainsFold(v string) predicate.StarknetDeclareTx {
 	return predicate.StarknetDeclareTx(sql.FieldContainsFold(FieldClassHash, v))
+}
+
+// CreatedAtEQ applies the EQ predicate on the "created_at" field.
+func CreatedAtEQ(v time.Time) predicate.StarknetDeclareTx {
+	return predicate.StarknetDeclareTx(sql.FieldEQ(FieldCreatedAt, v))
+}
+
+// CreatedAtNEQ applies the NEQ predicate on the "created_at" field.
+func CreatedAtNEQ(v time.Time) predicate.StarknetDeclareTx {
+	return predicate.StarknetDeclareTx(sql.FieldNEQ(FieldCreatedAt, v))
+}
+
+// CreatedAtIn applies the In predicate on the "created_at" field.
+func CreatedAtIn(vs ...time.Time) predicate.StarknetDeclareTx {
+	return predicate.StarknetDeclareTx(sql.FieldIn(FieldCreatedAt, vs...))
+}
+
+// CreatedAtNotIn applies the NotIn predicate on the "created_at" field.
+func CreatedAtNotIn(vs ...time.Time) predicate.StarknetDeclareTx {
+	return predicate.StarknetDeclareTx(sql.FieldNotIn(FieldCreatedAt, vs...))
+}
+
+// CreatedAtGT applies the GT predicate on the "created_at" field.
+func CreatedAtGT(v time.Time) predicate.StarknetDeclareTx {
+	return predicate.StarknetDeclareTx(sql.FieldGT(FieldCreatedAt, v))
+}
+
+// CreatedAtGTE applies the GTE predicate on the "created_at" field.
+func CreatedAtGTE(v time.Time) predicate.StarknetDeclareTx {
+	return predicate.StarknetDeclareTx(sql.FieldGTE(FieldCreatedAt, v))
+}
+
+// CreatedAtLT applies the LT predicate on the "created_at" field.
+func CreatedAtLT(v time.Time) predicate.StarknetDeclareTx {
+	return predicate.StarknetDeclareTx(sql.FieldLT(FieldCreatedAt, v))
+}
+
+// CreatedAtLTE applies the LTE predicate on the "created_at" field.
+func CreatedAtLTE(v time.Time) predicate.StarknetDeclareTx {
+	return predicate.StarknetDeclareTx(sql.FieldLTE(FieldCreatedAt, v))
 }
 
 // And groups predicates with the AND operator between them.

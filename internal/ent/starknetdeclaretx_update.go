@@ -6,12 +6,13 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"time"
 
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
-	"github.com/inchori/starknet-indexer/ent/predicate"
-	"github.com/inchori/starknet-indexer/ent/starknetdeclaretx"
+	"github.com/inchori/starknet-indexer/internal/ent/predicate"
+	"github.com/inchori/starknet-indexer/internal/ent/starknetdeclaretx"
 )
 
 // StarknetDeclareTxUpdate is the builder for updating StarknetDeclareTx entities.
@@ -76,6 +77,20 @@ func (sdtu *StarknetDeclareTxUpdate) SetNillableClassHash(s *string) *StarknetDe
 	return sdtu
 }
 
+// SetCreatedAt sets the "created_at" field.
+func (sdtu *StarknetDeclareTxUpdate) SetCreatedAt(t time.Time) *StarknetDeclareTxUpdate {
+	sdtu.mutation.SetCreatedAt(t)
+	return sdtu
+}
+
+// SetNillableCreatedAt sets the "created_at" field if the given value is not nil.
+func (sdtu *StarknetDeclareTxUpdate) SetNillableCreatedAt(t *time.Time) *StarknetDeclareTxUpdate {
+	if t != nil {
+		sdtu.SetCreatedAt(*t)
+	}
+	return sdtu
+}
+
 // Mutation returns the StarknetDeclareTxMutation object of the builder.
 func (sdtu *StarknetDeclareTxUpdate) Mutation() *StarknetDeclareTxMutation {
 	return sdtu.mutation
@@ -128,6 +143,9 @@ func (sdtu *StarknetDeclareTxUpdate) sqlSave(ctx context.Context) (n int, err er
 	}
 	if value, ok := sdtu.mutation.ClassHash(); ok {
 		_spec.SetField(starknetdeclaretx.FieldClassHash, field.TypeString, value)
+	}
+	if value, ok := sdtu.mutation.CreatedAt(); ok {
+		_spec.SetField(starknetdeclaretx.FieldCreatedAt, field.TypeTime, value)
 	}
 	if n, err = sqlgraph.UpdateNodes(ctx, sdtu.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
@@ -194,6 +212,20 @@ func (sdtuo *StarknetDeclareTxUpdateOne) SetClassHash(s string) *StarknetDeclare
 func (sdtuo *StarknetDeclareTxUpdateOne) SetNillableClassHash(s *string) *StarknetDeclareTxUpdateOne {
 	if s != nil {
 		sdtuo.SetClassHash(*s)
+	}
+	return sdtuo
+}
+
+// SetCreatedAt sets the "created_at" field.
+func (sdtuo *StarknetDeclareTxUpdateOne) SetCreatedAt(t time.Time) *StarknetDeclareTxUpdateOne {
+	sdtuo.mutation.SetCreatedAt(t)
+	return sdtuo
+}
+
+// SetNillableCreatedAt sets the "created_at" field if the given value is not nil.
+func (sdtuo *StarknetDeclareTxUpdateOne) SetNillableCreatedAt(t *time.Time) *StarknetDeclareTxUpdateOne {
+	if t != nil {
+		sdtuo.SetCreatedAt(*t)
 	}
 	return sdtuo
 }
@@ -280,6 +312,9 @@ func (sdtuo *StarknetDeclareTxUpdateOne) sqlSave(ctx context.Context) (_node *St
 	}
 	if value, ok := sdtuo.mutation.ClassHash(); ok {
 		_spec.SetField(starknetdeclaretx.FieldClassHash, field.TypeString, value)
+	}
+	if value, ok := sdtuo.mutation.CreatedAt(); ok {
+		_spec.SetField(starknetdeclaretx.FieldCreatedAt, field.TypeTime, value)
 	}
 	_node = &StarknetDeclareTx{config: sdtuo.config}
 	_spec.Assign = _node.assignValues
